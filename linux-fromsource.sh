@@ -76,26 +76,26 @@ InitializeGlobalVars() {
     declare -ga iaPATCHS=(
         "https://raw.githubusercontent.com/graysky2/kernel_gcc_patch/master/enable_additional_cpu_optimizations_for_gcc_v9.1+_kernel_v5.7+.patch"
     )                                                                           # patchs to auto-download and auto-apply (URL/file must end in .patch!)
-    declare -g sWORKPATHPARENT="/tmp"                                           # /work/path (path where package will be extracted and compilation will take place) (~2GiB needed for tmpfs)
-    declare -g sWORKPATH="${sWORKPATHPARENT}/$(basename "$0" .sh)"              # /work/path/linux-fromsource (use a consistent name to support resuming)
-    declare -g sMODPROBEDB="${HOME:-"/home/$USER"}/.config/modprobed.db"        # default modprobed-db database file location
-    declare -g sPKGNAME="$(basename "$1")"                                      # linux-x.x.x.tar.xz
-    declare -g sPKGPATH="$(dirname "$(realpath "$1")")"                         # /pkg/path/
-    declare -g sPKGFULLNAME="$(realpath "$1")"                                  # /pkg/path/linux-x.x.x.tar.xz
-    declare -g sPKGBASENAME="${sPKGNAME%.tar.xz}"                               # linux-x.x.x
+    declare -g sWORKPATHPARENT=/tmp                                             # /work/path (path where package will be extracted and compilation will take place) (~2GiB needed for tmpfs)
+    declare -g sWORKPATH=${sWORKPATHPARENT}/$(basename "$0" .sh)                # /work/path/linux-fromsource (use a consistent name to support resuming)
+    declare -g sMODPROBEDB=${HOME:-/home/$USER}/.config/modprobed.db            # default modprobed-db database file location
+    declare -g sPKGNAME=$(basename "$1")                                        # linux-x.x.x.tar.xz
+    declare -g sPKGPATH=$(dirname "$(realpath "$1")")                           # /pkg/path/
+    declare -g sPKGFULLNAME=$(realpath "$1")                                    # /pkg/path/linux-x.x.x.tar.xz
+    declare -g sPKGBASENAME=${sPKGNAME%.tar.xz}                                 # linux-x.x.x
     declare -g sKVER=${sPKGBASENAME//'linux-'}                                  # x.x.x
-    declare -g sKVERMM="${sKVER%.*}"                                            # x.x
-    declare -g sKVERMAJOR="${sKVERMM%.*}"                                       # x
-    declare -g sEXTRACTPATH="${sWORKPATH:-'.'}/${sPKGNAME%.tar.xz}"             # /work/path/linux-x.x.x
-    declare -g sWORKTAR="$sWORKPATH/${sPKGNAME%.xz}"                            # /work/path/linux-x.x.x.tar
-    declare -g sWORKPKG="$sWORKPATH/$sPKGNAME"                                  # /work/path/linux-x.x.x.tar.xz
-    declare -g sLOCALVER="${sKVER}"                                             # x.x.x (CONFIG_LOCALVERSION gets appended later if set during config)
-    declare -g sINSTALLPATH="${sPKGPATH}/INSTALL-${sLOCALVER}"                  # kernel, headers, modules, System.map, .config, and log are copied here (can change later)
+    declare -g sKVERMM=${sKVER%.*}                                              # x.x
+    declare -g sKVERMAJOR=${sKVERMM%.*}                                         # x
+    declare -g sEXTRACTPATH=${sWORKPATH:-'.'}/${sPKGNAME%.tar.xz}               # /work/path/linux-x.x.x
+    declare -g sWORKTAR=${sWORKPATH}/${sPKGNAME%.xz}                            # /work/path/linux-x.x.x.tar
+    declare -g sWORKPKG=${sWORKPATH}/${sPKGNAME}                                # /work/path/linux-x.x.x.tar.xz
+    declare -g sLOCALVER=$sKVER                                                 # x.x.x (CONFIG_LOCALVERSION gets appended later if set during config)
+    declare -g sINSTALLPATH=${sPKGPATH}/INSTALL-${sLOCALVER}                    # kernel, headers, modules, System.map, .config, and log are copied here (can change later)
     declare -gi iSNDTOGGLE=1                                                    # set to 0 to disable all sounds
-    declare -g sSHAFILE="${sWORKPATH}/v${sKVERMAJOR}.x-sha256sums.asc"          # /work/path/v5.x-sha256sums.asc
-    declare -g sSIGFILE="${sWORKPATH}/v${sKVERMAJOR}.x-linux-${sKVER}.tar.sign" # /work/path/v5.x-linux-x.x.x.tar.sign
-    declare -g sCDNSHAURL="https://cdn.kernel.org/pub/linux/kernel/v${sKVERMAJOR}.x/sha256sums.asc"
-    declare -g sCDNSIGURL="https://cdn.kernel.org/pub/linux/kernel/v${sKVERMAJOR}.x/linux-${sKVER}.tar.sign"
+    declare -g sSHAFILE=${sWORKPATH}/v${sKVERMAJOR}.x-sha256sums.asc            # /work/path/v5.x-sha256sums.asc
+    declare -g sSIGFILE=${sWORKPATH}/v${sKVERMAJOR}.x-linux-${sKVER}.tar.sign   # /work/path/v5.x-linux-x.x.x.tar.sign
+    declare -g sCDNSHAURL=https://cdn.kernel.org/pub/linux/kernel/v${sKVERMAJOR}.x/sha256sums.asc
+    declare -g sCDNSIGURL=https://cdn.kernel.org/pub/linux/kernel/v${sKVERMAJOR}.x/linux-${sKVER}.tar.sign
     declare -gi iSND_XDG=1                                                      # 1=libcanberra 0=terminal bell
     declare -g sCFGLOCALVER=""                                                  # updates to CONFIG_LOCALVERSION (if set)
     declare -g cOFF='\033[0m'                                                   # text reset
@@ -113,11 +113,11 @@ InitializeGlobalVars() {
     declare -gi iKMSECSTART=0                                                   # make modules start time
     declare -gi iKMSECEND=0                                                     # make modules end time
     declare -gi iKMSECTOTAL=0                                                   # make modules total seconds (logged)
-    declare -g sLOGPATH="$sWORKPATH"                                            # log file path (gets copied to INSTALL path)
-    declare -g sLOGNAME="${0##*/}"                                              # scriptname.sh
-    declare -g sLOGNAME="${sLOGNAME%.*}"                                        # scriptname
-    declare -g sLOGUID="$(date +%m%d%y-%H:%M:%S)"                               # "unique" id
-    declare -g sLOGFULLNAME="${sLOGPATH}/${sLOGNAME}-${sLOGUID}.log"            # full path & file name
+    declare -g sLOGPATH=$sWORKPATH                                              # log file path (gets copied to INSTALL path)
+    declare -g sLOGNAME=${0##*/}                                                # scriptname.sh
+    declare -g sLOGNAME=${sLOGNAME%.*}                                          # scriptname
+    declare -g sLOGUID=$(date +%m%d%y-%H:%M:%S)                                 # "unique" id
+    declare -g sLOGFULLNAME=${sLOGPATH}/${sLOGNAME}-${sLOGUID}.log              # full path & file name
 
     return 0
 }
@@ -146,7 +146,7 @@ UsageCheck() {
     fi
 
     # basic parameter checks
-    if [[ ! $# -gt 0 || -z $1 || ! -f $1 || $1 = @("-h"|"-help"|"--help"|"-?") ]]; then
+    if [[ ! $# -gt 0 || -z $1 || ! -f $1 || ${1,,} = @(-h|-help|--help|"-?") ]]; then
         printf "%s v%s\n\n" "${0##*/}" "$sSCRIPTVER"
         printf "Usage:\t%s %s\n" "${0##*/}" "linux-x.x.x.tar.xz"
         exit 0
@@ -214,7 +214,7 @@ RequirementsCheck() {
             if hash "$sCMD" &>/dev/null; then
                 aaCMD+=(["$sCMD"]="$(hash -t "$sCMD")")
             else
-                : # TODO can hash fail if type succeeded?
+                printf "Hash failed for command: \"%s\"" "$sCMD"
             fi
         fi
     done
@@ -230,19 +230,19 @@ RequirementsCheck() {
 }
 
 ################################################################################
-# Msg i(nfo)|s(uccess)|w(arning)|e(rror) "display text" 0/NULL(nosound)|1(sound)
+# Log i(nfo)|s(uccess)|w(arning)|e(rror) "display text" 0/NULL(nosound)|1(sound)
 # Standardize the script output to more easily differentiate it from command
 # output and enable logging to file a concise summary
 # TODO: refactor so type isn't required a required parameter and NULL type=info?
 
-Msg() {
+Log() {
 
     if [[ $# -lt 2 || $# -gt 3 ]]; then
         echo "Internal parameter error"
         return 1
     fi
 
-    local sTYPE="${1:-"error"}" sMSG="${2:-"error"}" iUSESOUND="${3:-"0"}" sTYPENAME=""
+    local sTYPE=${1:-"error"} sMSG=${2:-"error"} iUSESOUND=${3:-"0"} sTYPENAME=""
 
     case "${sTYPE,,}" in
         ("i") # Info
@@ -265,12 +265,12 @@ Msg() {
             if (( iUSESOUND )) && (( iSNDTOGGLE )); then PlaySnd "$sTYPE"; fi
         ;;
         ("*") # internal usage error
-            echo "Msg: type parameter error: \"$sTYPE\""
+            echo "Log: type parameter error: \"$sTYPE\""
             return 1
         ;;
     esac
 
-    # log Msg to file only if the file exists and we have write access to it
+    # log Log to file only if the file exists and we have write access to it
     if [[ -f $sLOGFULLNAME && -w $sLOGFULLNAME ]]; then
         printf "%s\n" "$(date "+%m%d%y  %H:%M:%S")  $sTYPENAME  $sMSG" >> "$sLOGFULLNAME" # double-space delimited
     fi
@@ -287,16 +287,17 @@ CopyFromTo() {
     local sFROM=${1:-"error"} sTO=${2:-"error"}
 
     [[ $sFROM = "error" || $sTO = "error" ]] && return 1
+
     if [[ -d $sFROM && -r $sFROM ]]; then
-        Msg i "Copying $1 to $2"
-        cp -rf --strip-trailing-slashes "$sFROM" "$sTO" || { Msg e "Copy $sFROM to $sTO failed" 1; return 1; }
-        Msg s "Copy $sFROM to $sTO succeeded"
+        Log i "Copying $1 to $2"
+        cp -rf --strip-trailing-slashes "$sFROM" "$sTO" || { Log e "Copy $sFROM to $sTO failed" 1; return 1; }
+        Log s "Copy $sFROM to $sTO succeeded"
     elif [[ -f $sFROM && -r $sFROM ]]; then
-        Msg i "Copying $1 to $2"
-        cp -f "$sFROM" "$sTO" || { Msg e "Copy $sFROM to $sTO failed" 1; return 1; }
-        Msg s "Copy $sFROM to $sTO succeeded"
+        Log i "Copying $1 to $2"
+        cp -f "$sFROM" "$sTO" || { Log e "Copy $sFROM to $sTO failed" 1; return 1; }
+        Log s "Copy $sFROM to $sTO succeeded"
     else
-        Msg e "Copy failed, \"$sFROM\" could not be read" 1
+        Log e "Copy failed, \"$sFROM\" could not be read" 1
         return 1
     fi
 
@@ -312,15 +313,15 @@ ChangeDirectory() {
     local sFROM=${PWD:-$(command pwd -P)} sTO=${1:-${PWD:-$(command pwd -P)}}
 
     if [[ ! $sFROM -ef "$sTO" ]]; then
-        Msg i "Changing working directory from $sFROM to $sTO"
+        Log i "Changing working directory from $sFROM to $sTO"
         if cd "$sEXTRACTPATH"; then
-            Msg s "Change working directory succeeded"
+            Log s "Change working directory succeeded"
         else
-            Msg e "Change working directory from $sFROM to $sTO failed"
+            Log e "Change working directory from $sFROM to $sTO failed"
             return 1
         fi
     else
-        Msg w "Change directory skipped, \"$sFROM\"=\"$sTO\"" # $sFROM = $sTO
+        Log w "Change directory skipped, \"$sFROM\"=\"$sTO\"" # $sFROM = $sTO
     fi
 
     return 0
@@ -337,8 +338,8 @@ ConfirmToContinue() {
 
     local sPREFIX="==> " sPROMPT=${1:-"Do you want to continue?"} sSUFFIX=" "
 
-    while true; do
-        read -i "" -rp "${sPREFIX}${sPROMPT}${sSUFFIX}" sCHOICE
+    while :; do
+        read -rp "${sPREFIX}${sPROMPT}${sSUFFIX}" sCHOICE
         case ${sCHOICE,,} in
             ("y"|"yes")
                 break 1
@@ -359,43 +360,41 @@ ConfirmToContinue() {
 # Log file init
 # A log file is kept in WORKPATH (until completion, when it is copied to
 # INSTALLPATH) that logs the date, time, and message(s) that pass through the
-# Msg function (concise summary of events)
+# Log function (concise summary of events)
 
 InitializeLogFile() {
 
     # write access to log file path
-    [[ ! -w $sLOGPATH ]] && { Msg e "No write access to log file path: $sLOGPATH" 1; return 1; }
+    [[ ! -w $sLOGPATH ]] && { Log e "No write access to log file path: $sLOGPATH" 1; return 1; }
 
     # if somehow a log file exists with the same name, backup the old one
     if [[ -f $sLOGFULLNAME~ ]]; then
-        Msg e "Existing backup log file at ${sLOGFULLNAME}~ will be overwritten if you continue without moving it" 1
+        Log e "Existing backup log file at ${sLOGFULLNAME}~ will be overwritten if you continue without moving it" 1
         ConfirmToContinue
     fi
 
     if [[ -f $sLOGFULLNAME ]]; then
-        Msg e "Backing up existing log file at $sLOGFULLNAME with a conflicting name" 1
+        Log e "Backing up existing log file at $sLOGFULLNAME with a conflicting name" 1
         mv -fv "$sLOGFULLNAME" "$sLOGFULLNAME~"
     fi
 
     # if the log file path does not exist, create it
     if [[ ! -d $sLOGPATH ]]; then
-        mkdir -p "$sLOGPATH" || { Msg e "Failed to create log file path at $sLOGPATH" 1; return 1; }
-        Msg s "Log file path created at $sLOGPATH"
+        mkdir -p "$sLOGPATH" || { Log e "Failed to create log file path at $sLOGPATH" 1; return 1; }
+        Log s "Log file path created at $sLOGPATH"
     fi
 
     # if the log file does not exist, create it
-    # if somehow touch fails we try redirection but that will
-    # fail if the file already exists (set -C)
     if [[ ! -f $sLOGFULLNAME ]]; then
         if touch "$sLOGFULLNAME"; then
-            Msg s "Created a new log file at $sLOGFULLNAME"
+            Log s "Created a new log file at $sLOGFULLNAME"
         else
-            Msg e "\"touch\" $sLOGFULLNAME failed" 1
-            Msg i "Attempting to create $sLOGFULLNAME using redirection"
+            Log e "\"touch\" $sLOGFULLNAME failed" 1
+            Log i "Attempting to create $sLOGFULLNAME using redirection"
             if printf "" > "$sLOGFULLNAME"; then
-                Msg s "Created a new log file at $sLOGFULLNAME"
+                Log s "Created a new log file at $sLOGFULLNAME"
             else
-                Msg e "Failed to create a log file at $sLOGFULLNAME" 1
+                Log e "Failed to create a log file using redirection at $sLOGFULLNAME" 1
                 return 1
             fi
         fi
@@ -412,12 +411,12 @@ BasicAccessCheck() {
 
     # read access to package
     # required to copy the package to the workpath
-    [[ ! -r $sPKGFULLNAME ]] && { Msg e "No read access to package: $sPKGFULLNAME" 1; return 1; }
+    [[ ! -r $sPKGFULLNAME ]] && { Log e "No read access to package: $sPKGFULLNAME" 1; return 1; }
 
     # write access to package path (for INSTALL- dir)
     # required if installpath resides in packagepath
     # TODO
-    [[ ! -w $sPKGPATH ]] && { Msg e "No write access to package: $sPKGPATH" 1; return 1; }
+    [[ ! -w $sPKGPATH ]] && { Log e "No write access to package: $sPKGPATH" 1; return 1; }
 
     # if the installpath is inside the pkgpath (default) we will need write access
     # to its parent to create the installdir write access to parent of workpath
@@ -425,7 +424,7 @@ BasicAccessCheck() {
     # try [[ -w sWORKPATH ]] because it will fail! TODO update if this changes
     # note: the first test requires bash >= 3.2
     if [[ $sINSTALLPATH =~ $sPKGPATH ]]; then
-        [[ ! -w $sWORKPATHPARENT ]] && { Msg e "No write access to create working directory" 1; return 1; }
+        [[ ! -w $sWORKPATHPARENT ]] && { Log e "No write access to create working directory" 1; return 1; }
     else
         :
     fi
@@ -442,19 +441,19 @@ BasicAccessCheck() {
 SoundSetup() {
 
     if (( iSNDTOGGLE )); then
-        Msg i "Sound enabled. Determining type of sounds to be used"
+        Log i "Sound enabled. Determining type of sounds to be used"
         if command -v canberra-gtk-play &>/dev/null && command -v gsettings &>/dev/null; then
             # if the schema or key is not found
             gsettings get org.gnome.desktop.sound event-sounds &>/dev/null || iSND_XDG=0
             # if the key = false
             ! gsettings get org.gnome.desktop.sound event-sounds &>/dev/null && iSND_XDG=0
-            (( iSND_XDG )) && Msg i "Using canberra-gtk-play for sounds"
+            (( iSND_XDG )) && Log i "Using canberra-gtk-play for sounds"
         else
             iSND_XDG=0
-            Msg i "Using terminal bell for sounds"
+            Log i "Using terminal bell for sounds"
         fi
     elif (( ! iSNDTOGGLE )); then
-        Msg i "Sounds disabled"
+        Log i "Sounds disabled"
     fi
 
     return 0
@@ -468,7 +467,7 @@ PlaySnd() {
 
     [[ $# -ne 1 ]] && { echo "Internal parameter error"; return 1; }
 
-    local sTYPE="${1:-"error"}"
+    local sTYPE=${1:-"error"}
 
     if (( iSNDTOGGLE )); then
         case "${sTYPE,,}" in
@@ -511,17 +510,17 @@ WorkPathSetup() {
 
     # if workpath already exists and is not the same as the package path ask about removing it
     if [[ -d $sWORKPATH ]] && [[ ! $sWORKPATH -ef $sPKGPATH ]]; then
-        Msg s "Existing work directory found at $sWORKPATH"
-        while true; do
+        Log s "Existing work directory found at $sWORKPATH"
+        while :; do
             read -rp "==> Do you want to remove it? " sCHOICE
             case ${sCHOICE,,} in
                 ("y"|"yes")
-                    rm -r "$sWORKPATH" || { Msg e "Remove $sWORKPATH failed" 1; return 1; }
-                    Msg s "Remove existing work directory at $sWORKPATH succeeded"
+                    rm -r "$sWORKPATH" || { Log e "Remove $sWORKPATH failed" 1; return 1; }
+                    Log s "Remove existing work directory at $sWORKPATH succeeded"
                     break 1
                 ;;
                 ("n"|"no")
-                    Msg s "Existing work directory at $sWORKPATH preserved"
+                    Log s "Existing work directory at $sWORKPATH preserved"
                     break 1
                 ;;
                 ("*")
@@ -533,9 +532,9 @@ WorkPathSetup() {
 
     # if the work path doesn't exist, create it
     if [[ ! -d $sWORKPATH ]] && [[ ! $sWORKPATH -ef $sPKGPATH ]]; then
-        Msg i "Creating work directory"
-        mkdir -pv "$sWORKPATH" || { Msg e "Creating work directory at $sWORKPATH failed" 1; return 1; }
-        Msg s "Create work directory at $sWORKPATH succeeded"
+        Log i "Creating work directory"
+        mkdir -pv "$sWORKPATH" || { Log e "Creating work directory at $sWORKPATH failed" 1; return 1; }
+        Log s "Create work directory at $sWORKPATH succeeded"
     fi
 
     return 0
@@ -549,22 +548,22 @@ WorkPathSetup() {
 CheckExtractionPath() {
 
     if [[ -d $sEXTRACTPATH ]]; then
-        Msg w "Package extraction path found at $sEXTRACTPATH" 1
-        while true; do
+        Log w "Package extraction path found at $sEXTRACTPATH" 1
+        while :; do
             read -rp "==> Do you want to remove it? " sCHOICE
             case ${sCHOICE,,} in
                 ("y"|"yes")
                     if rm -r "$sEXTRACTPATH"; then
-                        Msg s "Remove $sEXTRACTPATH succeeded"
+                        Log s "Remove $sEXTRACTPATH succeeded"
                     else
-                        Msg e "Remove $sEXTRACTPATH failed!" 1
+                        Log e "Remove $sEXTRACTPATH failed!" 1
                         ConfirmToContinue
                     fi
                     break 1
                 ;;
                 ("n"|"no")
-                    Msg i "Extraction path preserved at $sEXTRACTPATH"
-                    Msg w "Resume enabled, some steps will be skipped"
+                    Log i "Extraction path preserved at $sEXTRACTPATH"
+                    Log w "Resume enabled, some steps will be skipped"
                     iRESUME=1
                     break 1
                 ;;
@@ -585,11 +584,11 @@ CheckExtractionPath() {
 CopyPackageToWorkPath() {
 
     if (( iRESUME )) && [[ ! $sWORKPATH -ef $sPKGPATH ]]; then
-        Msg w "Resume enabled, skipping copy package to work directory"
+        Log w "Resume enabled, skipping copy package to work directory"
     elif (( ! iRESUME )) && [[ ! $sWORKPATH -ef $sPKGPATH ]]; then
         CopyFromTo "$sPKGFULLNAME" "$sWORKPATH"
     elif [[ $sWORKPATH -ef $sPKGPATH ]]; then
-        Msg i "Package path and work path are the same, skipping copy package to work directory"
+        Log i "Package path and work path are the same, skipping copy package to work directory"
     fi
 
     return 0
@@ -604,58 +603,58 @@ CopyPackageToWorkPath() {
 WorkPackageChecksum() {
 
     if (( iRESUME )); then
-        Msg w "Resume enabled, skipping $sSHAFILE download and check"
+        Log w "Resume enabled, skipping $sSHAFILE download and check"
     else
-        Msg i "Begining checksum checks"
-        Msg i "Downloading ${sCDNSHAURL}"
+        Log i "Begining checksum checks"
+        Log i "Downloading ${sCDNSHAURL}"
         if curl -sL "$sCDNSHAURL" -o "$sSHAFILE"; then
-            Msg s "Download of $sSHAFILE succeeded"
+            Log s "Download of $sSHAFILE succeeded"
             # check pgp of checksum file
-            Msg i "Checking PGP signature of $sSHAFILE"
-            Msg i "Locating keys for autosigner@kernel.org"
+            Log i "Checking PGP signature of $sSHAFILE"
+            Log i "Locating keys for autosigner@kernel.org"
             if gpg --locate-keys autosigner@kernel.org; then
-                Msg s "Locate keys succeeded"
-                Msg i "Verifying PGP signature of $sSHAFILE"
+                Log s "Locate keys succeeded"
+                Log i "Verifying PGP signature of $sSHAFILE"
                 if gpg --verify "$sSHAFILE"; then
-                    Msg w "Review the results carefully..."
+                    Log w "Review the results carefully..."
                     ConfirmToContinue
-                    Msg i "Checking for \"$sPKGNAME\" in $sSHAFILE"
+                    Log i "Checking for \"$sPKGNAME\" in $sSHAFILE"
                     # if one entry is found TODO is more than 1 entry ever possible?
                     if [[ $(grep -F "$sPKGNAME" "$sSHAFILE" -c) = "1" ]]; then
-                        Msg s "One entry for \"$sPKGNAME\" found in $sSHAFILE"
-                        Msg i "Comparing local and remote checksums"
+                        Log s "One entry for \"$sPKGNAME\" found in $sSHAFILE"
+                        Log i "Comparing local and remote checksums"
                         sPKGSHA256=$(sha256sum -b "$sWORKPKG")
                         sPKGSHA256=${sPKGSHA256%% *}
                         sCDNSHA256=$(grep -F "$sPKGNAME" "$sSHAFILE")
                         sCDNSHA256=${sCDNSHA256%% *}
                         # compare
                         if [[ $sPKGSHA256 = "$sCDNSHA256" ]]; then
-                            Msg s "Local and remote checksums match"
+                            Log s "Local and remote checksums match"
                         else
-                            Msg e "Local and remote checksums do not match" 1
-                            Msg w "Local sha256sum : $sPKGSHA256"
-                            Msg w "Remote sha256sum: $sCDNSHA256"
+                            Log e "Local and remote checksums do not match" 1
+                            Log w "Local sha256sum : $sPKGSHA256"
+                            Log w "Remote sha256sum: $sCDNSHA256"
                             ConfirmToContinue
                         fi
                     elif [[ $(grep -F "$sPKGNAME" "$sSHAFILE" -c) = "0" ]]; then
-                        Msg e "No entries found for \"$sPKGNAME\" in $sSHAFILE"
-                        Msg i "Running \"sha256sum -c $sSHAFILE --ignore-missing\" for review"
+                        Log e "No entries found for \"$sPKGNAME\" in $sSHAFILE"
+                        Log i "Running \"sha256sum -c $sSHAFILE --ignore-missing\" for review"
                         sha256sum -c "$sSHAFILE" --ignore-missing
                         ConfirmToContinue
                     else
-                        Msg e "Unknown error occured, perform sha256sum check manually" 1
+                        Log e "Unknown error occured, perform sha256sum check manually" 1
                         ConfirmToContinue
                     fi
                 else
-                    Msg e "\"gpg --verify $sSHAFILE\" failed" 1
+                    Log e "\"gpg --verify $sSHAFILE\" failed" 1
                     ConfirmToContinue
                 fi
             else
-                Msg e "Unable to locate keys for autosigner@kernel.org" 1
+                Log e "Unable to locate keys for autosigner@kernel.org" 1
                 ConfirmToContinue
             fi
         else
-            Msg e "sha256sums.asc download failed. Perform sha256sum check manually" 1
+            Log e "sha256sums.asc download failed. Perform sha256sum check manually" 1
             ConfirmToContinue
         fi
     fi
@@ -671,15 +670,15 @@ WorkPackageChecksum() {
 ExtractWorkPackage() {
 
     if (( iRESUME )); then
-        Msg w "Resume enabled, skipping package extraction"
+        Log w "Resume enabled, skipping package extraction"
     else
-        if [[ -f $sWORKTAR ]]; then Msg i "$sWORKTAR will be removed and replaced if the integrity test succeeds"; fi
-        Msg i "Testing the integrity of $sWORKPKG using \"xz -d -t -T0 -v\""
-        xz -d -t -T0 -v "$sWORKPKG" || { Msg e "Integrity test failed" 1; return 1; }
-        Msg s "Integrity test of $sWORKPKG succeeded"
-        Msg i "Extracting $sWORKPKG using \"xz -d -T0 -k -f -v\"..."
-        xz -d -T0 -k -f -v "$sWORKPKG" || { Msg e "Extraction failed" 1; return 1; }
-        Msg s "Extraction of $sWORKPKG succeeded"
+        [[ -f $sWORKTAR ]] && Log w "$sWORKTAR will be removed and replaced if the integrity test succeeds"
+        Log i "Testing the integrity of $sWORKPKG using \"xz -d -t -T0 -v\""
+        xz -d -t -T0 -v "$sWORKPKG" || { Log e "Integrity test failed" 1; return 1; }
+        Log s "Integrity test of $sWORKPKG succeeded"
+        Log i "Extracting $sWORKPKG using \"xz -d -T0 -k -f -v\"..."
+        xz -d -T0 -k -f -v "$sWORKPKG" || { Log e "Extraction failed" 1; return 1; }
+        Log s "Extraction of $sWORKPKG succeeded"
     fi
 
     return 0
@@ -692,29 +691,29 @@ ExtractWorkPackage() {
 WorkTarPGPCheck() {
 
     if (( iRESUME )); then
-        Msg w "Resume enabled, skipping package PGP signature check"
+        Log w "Resume enabled, skipping package PGP signature check"
     else
         # download and check sig
-        Msg i "Downloading ${sCDNSIGURL}"
+        Log i "Downloading ${sCDNSIGURL}"
         if curl -sL "$sCDNSIGURL" -o "$sSIGFILE"; then
-            Msg s "Download of $sSIGFILE succeeded"
-            Msg i "Locating public keys for torvalds@kernel.org and gregkh@kernel.org"
+            Log s "Download of $sSIGFILE succeeded"
+            Log i "Locating public keys for torvalds@kernel.org and gregkh@kernel.org"
             if gpg --locate-keys torvalds@kernel.org gregkh@kernel.org; then
-                Msg w "NOTICE: This script does not modify public key trust level"
-                Msg i "Verifying PGP signature..."
+                Log w "NOTICE: This script does not modify public key trust level"
+                Log i "Verifying PGP signature..."
                 if gpg --verify "$sSIGFILE" "$sWORKTAR"; then
-                    Msg w "Review the results carefully..."
+                    Log w "Review the results carefully..."
                     ConfirmToContinue
                 else
-                    Msg e "\"gpg --verify $sSIGFILE\" failed" 1
+                    Log e "\"gpg --verify $sSIGFILE\" failed" 1
                     ConfirmToContinue
                 fi
             else
-                Msg e "\"gpg --locate-keys torvalds@kernel.org gregkh@kernel.org\" failed" 1
+                Log e "\"gpg --locate-keys torvalds@kernel.org gregkh@kernel.org\" failed" 1
                 ConfirmToContinue
             fi
         else
-            Msg e "Download of $sCDNSIGURL failed" 1
+            Log e "Download of $sCDNSIGURL failed" 1
             ConfirmToContinue
         fi
     fi
@@ -729,14 +728,14 @@ WorkTarPGPCheck() {
 ExtractWorkTar() {
 
     if (( iRESUME )); then
-        Msg w "Resume enabled, skipping tar extraction"
+        Log w "Resume enabled, skipping tar extraction"
         # TODO if resuming ask if extract tar and overwrite anyway?
     else
-        Msg i "Extracting $sWORKTAR to ${sEXTRACTPATH}..."
-        if tar -xf "$sWORKTAR" -C "$sWORKPATH"; then
-            Msg s "Extraction of $sWORKTAR succeeded"
+        Log i "Extracting $sWORKTAR to ${sEXTRACTPATH}..."
+        if tar -C "$sWORKPATH" -xf "$sWORKTAR"; then
+            Log s "Extraction of $sWORKTAR succeeded"
         else
-            Msg e "Extraction of $sWORKTAR failed"
+            Log e "Extraction of $sWORKTAR failed"
             return 1
         fi
     fi
@@ -753,19 +752,19 @@ ExtractWorkTar() {
 InitializeKernelSource() {
 
     if (( iRESUME )); then
-        Msg w "Resume enabled, running \"make clean\" (does not remove .config)"
+        Log w "Resume enabled, running \"make clean\" (does not remove .config)"
         if make clean; then
-            Msg s "\"make clean\" succeeded"
+            Log s "\"make clean\" succeeded"
         else
-            Msg e "\"make clean\" failed" 1
+            Log e "\"make clean\" failed" 1
             return 1
         fi
     else
-        Msg i "Running \"make mrproper\""
+        Log i "Running \"make mrproper\""
         if make mrproper; then
-            Msg s "\"make mrproper\" succeeded"
+            Log s "\"make mrproper\" succeeded"
         else
-            Msg e "\"make mrproper\" failed" 1
+            Log e "\"make mrproper\" failed" 1
             return 1
         fi
     fi
@@ -973,11 +972,11 @@ TempMakeNConfig() {
 
     # menu goes here
 
-    Msg i "Running \"make nconfig\" so you can review the config"
+    Log i "Running \"make nconfig\" so you can review the config"
     if make nconfig; then
-        Msg s "\"make nconfig\" succceeded"
+        Log s "\"make nconfig\" succceeded"
     else
-        Msg e "\"make nconfig\" failed" 1
+        Log e "\"make nconfig\" failed" 1
         ConfirmToContinue
     fi
 
@@ -1018,77 +1017,77 @@ Main "$@"
 # TODO better file type support
 if [[ -n ${iaPATCHS[*]} && ${#iaPATCHS[@]} -ge 1 ]]; then
     for sPATCHSRC in "${iaPATCHS[@]}"; do
-        [[ $sPATCHSRC == *.patch ]] || continue
-        Msg i "Downloading $sPATCHSRC"
+        [[ ${sPATCHSRC,,} == *.patch ]] || continue
+        Log i "Downloading $sPATCHSRC"
         if curl -sL "$sPATCHSRC" -o "${sEXTRACTPATH}/${sPATCHSRC##*/}"; then
-            Msg i "Applying patch ${sPATCHSRC##*/}..."
+            Log i "Applying patch ${sPATCHSRC##*/}..."
             if patch -Np1 < "${sEXTRACTPATH}/${sPATCHSRC##*/}"; then
-                Msg s "Applying ${sPATCHSRC##*/} succeeded"
+                Log s "Applying ${sPATCHSRC##*/} succeeded"
             else
                 if (( iRESUME )); then
-                    Msg w "Patch(s) may have already been applied"
-                    Msg w "Review the results carefully..."
+                    Log w "Patch(s) may have already been applied"
+                    Log w "Review the results carefully..."
                     ConfirmToContinue
                 else
-                    Msg e "Applying ${sEXTRACTPATH}/${sPATCHSRC##*/} failed" 1
+                    Log e "Applying ${sEXTRACTPATH}/${sPATCHSRC##*/} failed" 1
                     ConfirmToContinue
                 fi
             fi
         else
-            Msg e "Download of $sPATCHSRC failed" 1
+            Log e "Download of $sPATCHSRC failed" 1
             ConfirmToContinue
         fi
     done
 else
-    Msg w "No patchs configured or recognized"
+    Log w "No patchs configured or recognized"
     ConfirmToContinue
 fi
 
 # pause for .config import, custom edits, or manual patchs
-Msg w "If you want to import a custom config, edit init/Kconfig, or manually add patches now is the time..."
-Msg i "Place your custom .config file into $sEXTRACTPATH"
-Msg i "Place any *.patch you want auto-applied into $sEXTRACTPATH (or apply them manually using patch)"
-Msg i "The latest Arch linux default kernel config can be found at:"
-Msg i "https://git.archlinux.org/svntogit/packages.git/plain/trunk/config?h=packages/linux"
+Log w "If you want to import a custom config, edit init/Kconfig, or manually add patches now is the time..."
+Log i "Place your custom .config file into $sEXTRACTPATH"
+Log i "Place any *.patch you want auto-applied into $sEXTRACTPATH (or apply them manually using patch)"
+Log i "The latest Arch linux default kernel config can be found at:"
+Log i "https://git.archlinux.org/svntogit/packages.git/plain/trunk/config?h=packages/linux"
 # (eg. init/Kconfig - Remove \"depends on ARC\" to enable -O3"
 ConfirmToContinue
 
 # if a .config is found at this point it was manually put there
-[[ -f "${sEXTRACTPATH}/.config" ]] && Msg s "Imported config found at ${sEXTRACTPATH}/.config"
+[[ -f "${sEXTRACTPATH}/.config" ]] && Log s "Imported config found at ${sEXTRACTPATH}/.config"
 
 # if there is no .config and modprobed-db is found run modprobed-db store and then run make localmodconfig
 # TODO more make *config options
 if [[ ! -f $sEXTRACTPATH/.config ]] && command -v modprobed-db &>/dev/null; then
     # TODO auto support custom modprobed-db db locations ($XDG_CONFIG_HOME/modprobed-db.conf)
-    Msg s "modprobed-db found"
-    Msg i "Running \"modprobed-db store\""
+    Log s "modprobed-db found"
+    Log i "Running \"modprobed-db store\""
     if modprobed-db store; then
-        Msg s "modprobed-db store succeeded"
-        Msg i "Running \"make LSMOD=$sMODPROBEDB localmodconfig\""
+        Log s "modprobed-db store succeeded"
+        Log i "Running \"make LSMOD=$sMODPROBEDB localmodconfig\""
         if make LSMOD="$sMODPROBEDB" localmodconfig; then
-            Msg s "\"make LSDMOD=$sMODPROBEDB localmodconfig\" succeeded"
+            Log s "\"make LSDMOD=$sMODPROBEDB localmodconfig\" succeeded"
         else
-            Msg e "\"make LSMOD=$sMODPROBEDB localmodconfig\" failed" 1
+            Log e "\"make LSMOD=$sMODPROBEDB localmodconfig\" failed" 1
             exit 1
         fi
     else
-        Msg e "\"modprobed-db store\" failed!" 1
-        Msg w "If you continue \"make localmodconfig\" will be run"
+        Log e "\"modprobed-db store\" failed!" 1
+        Log w "If you continue \"make localmodconfig\" will be run"
         ConfirmToContinue
         if make localmodconfig; then
-            Msg s "\"make localmodconfig\" succeeded"
+            Log s "\"make localmodconfig\" succeeded"
         else
-            Msg e "\"make localmodconfig\" failed" 1
+            Log e "\"make localmodconfig\" failed" 1
             exit 1
         fi
  fi
 elif [[ ! -f "${sEXTRACTPATH}/.config" ]]; then
     # no config was imported and modprobe-db is not installed/not found
-    Msg w "No .config found, running \"make defconfig\""
+    Log w "No .config found, running \"make defconfig\""
     if make defconfig; then
-        Msg s "make defconfig succeeded"
+        Log s "make defconfig succeeded"
     else
-        Msg e "make defconfig failed" 1
+        Log e "make defconfig failed" 1
         exit 1
     fi
 fi
@@ -1106,18 +1105,18 @@ TempMakeNConfig
 
 # confirm the real kernel version (in case the version derived from the file name != the real version)
 if [[ $sKVER != "$(make -s kernelversion)" ]]; then
-    Msg e "Initial kernel version ($sKVER) is not equal to package actual kernel version ($(make -s kernelversion))" 1
-    Msg e "This could indicate a problem with the script or an incorrectly named package"
+    Log e "Initial kernel version ($sKVER) is not equal to package actual kernel version ($(make -s kernelversion))" 1
+    Log e "This could indicate a problem with the script or an incorrectly named package"
     ConfirmToContinue
-    Msg w "Updating sKVER to the kernel version provided by make"
-    sKVER="$(make -s kernelversion)"
+    Log w "Updating sKVER to the kernel version provided by make"
+    sKVER=$(make -s kernelversion)
 else
-    Msg i "Kernel version derived from file name matches \"make kernelversion\""
+    Log i "Kernel version derived from file name matches \"make kernelversion\""
 fi
 
 # get the CONFIG_LOCALVERSION line from .config using grep (NULL=not found)
 # if "CONFIG_LOCALVERSION is not set", returns NULL
-sCFGLOCALVER="$(grep -F "CONFIG_LOCALVERSION=" ".config")"
+sCFGLOCALVER=$(grep -F "CONFIG_LOCALVERSION=" ".config")
 
 # strip the text outside the quotes (get the key value)
 # CONFIG_LOCALVERSION="example"
@@ -1125,64 +1124,64 @@ if [[ $sCFGLOCALVER != "" ]]; then
     sCFGLOCALVER=${sCFGLOCALVER#*\"}
     sCFGLOCALVER=${sCFGLOCALVER%\"*}
 else
-    Msg w "CONFIG_LOCALVERSION was not found or is not set"
-    Msg s "Default local version ($sLOCALVER) preserved"
+    Log w "CONFIG_LOCALVERSION was not found or is not set"
+    Log s "Default local version ($sLOCALVER) preserved"
 fi
 
 # update sLOCALVER and sINSTALLPATH if necessary
 # sLOCALVER = x.x.x-CONFIG_LOCALVERSION
 # sINSTALLPATH = /pkg/path/INSTALL-x.x.x-CONFIG_LOCALVERSION
 if [[ $sCFGLOCALVER != "" && $sCFGLOCALVER != "-" && $sCFGLOCALVER != "_" ]]; then
-    Msg s "Updating CONFIG_LOCALVERSION from .config"
+    Log s "Updating CONFIG_LOCALVERSION from .config"
     # if sCFGLOCALVER doesn't begin with "-", add it (seperator) if user used "_" as a seperator, let it remain
     if [[ ${sCFGLOCALVER:0:1} != "-" && ${sCFGLOCALVER:0:1} != "_" ]]; then
-        sCFGLOCALVER="-${sCFGLOCALVER}"
+        sCFGLOCALVER=-${sCFGLOCALVER}
     fi
     # append [-|_]CONFIG_LOCALVERSION to sLOCALVER
-    sLOCALVER="${sKVER}${sCFGLOCALVER}"
+    sLOCALVER=${sKVER}${sCFGLOCALVER}
     # replace one occurance of sKVER with the new sLOCALVER
-    sINSTALLPATH="${sINSTALLPATH/$sKVER/$sLOCALVER}" #sINSTALLPATH="${sPKGPATH}/${sIPPREFIX}-${sLOCALVER}"
-    Msg i "Local version updated to $sLOCALVER"
-    Msg i "Install path updated to $sINSTALLPATH"
+    sINSTALLPATH=${sINSTALLPATH}/${sKVER}/${sLOCALVER} #sINSTALLPATH="${sPKGPATH}/${sIPPREFIX}-${sLOCALVER}"
+    Log i "Local version updated to $sLOCALVER"
+    Log i "Install path updated to $sINSTALLPATH"
     ConfirmToContinue # TODO remove
 else
-    Msg w "CONFIG_LOCALVERSION was set to \"$sCFGLOCALVER\""
-    Msg s "Default sLOCALVER preserved"
+    Log w "CONFIG_LOCALVERSION was set to \"$sCFGLOCALVER\""
+    Log s "Default sLOCALVER preserved"
 fi
 
 # TODO support config_localversion_auto (scripts/setlocalversion)
 if [[ $(grep -F "CONFIG_LOCALVERSION_AUTO=y" ".config") != "" ]]; then
-    Msg w "CONFIG_LOCALVERSION_AUTO is not supported by this script"
+    Log w "CONFIG_LOCALVERSION_AUTO is not supported by this script"
 fi
 
 # create INSTALL subdir in installpath (to hold kernel, modules, and system.map)
 # rename any existing backup dirs with a "unique" id
 if [[ -d "${sINSTALLPATH}~" ]]; then
-    Msg w "Backup install directory already exists"
+    Log w "Backup install directory already exists"
     # TODO ask if want to remove or rename
     if mv -fv "${sINSTALLPATH}~" "${sINSTALLPATH}~$(date +%s)"; then
-        Msg s "Move existing backup directory succeeded"
+        Log s "Move existing backup directory succeeded"
     else
-        Msg e "Move existing backup directory failed" 1
+        Log e "Move existing backup directory failed" 1
         ConfirmToContinue
     fi
 elif [[ -d $sINSTALLPATH ]]; then
-    Msg w "Backing up existing install directory"
+    Log w "Backing up existing install directory"
     if mv -fv "$sINSTALLPATH" "${sINSTALLPATH}~"; then
-        Msg s "Backup of existing install directory succeeded"
+        Log s "Backup of existing install directory succeeded"
     else
-        Msg e "Backup of existing install directory failed" 1
+        Log e "Backup of existing install directory failed" 1
         ConfirmToContinue
     fi
 fi
 
 # if no INSTALL dir or previous was backed up create a new one
 if [[ ! -d $sINSTALLPATH ]]; then
-    Msg i "Making new install directory at $sINSTALLPATH"
+    Log i "Making new install directory at $sINSTALLPATH"
     if mkdir -pv "$sINSTALLPATH"; then
-        Msg s "Install directory created at $sINSTALLPATH"
+        Log s "Install directory created at $sINSTALLPATH"
     else
-        Msg e "Create install directory at $sINSTALLPATH failed" 1
+        Log e "Create install directory at $sINSTALLPATH failed" 1
         exit 1 # TODO return 1
     fi
 fi
@@ -1193,16 +1192,16 @@ if [[ -f ${sEXTRACTPATH}/.config ]]; then
 fi
 
 # make bzImage
-Msg i "Running \"make bzImage\""
+Log i "Running \"make bzImage\""
 iKSECSTART=$(date +%s)
 if make "$sMAKEFLAGS" bzImage; then
     iKSECEND=$(date +%s)
     iKSECTOTAL=$((iKSECEND - iKSECSTART))
-    Msg s "\"make bzImage\" succeeded after ~${iKSECTOTAL} seconds" 1
+    Log s "\"make bzImage\" succeeded after ~${iKSECTOTAL} seconds" 1
 else
     iKSECEND=$(date +%s)
     iKSECTOTAL=$((iKSECEND - iKSECSTART))
-    Msg e "\"make bzImage\" failed after ~${iKSECTOTAL} seconds"
+    Log e "\"make bzImage\" failed after ~${iKSECTOTAL} seconds"
     exit 1 # TODO return 1
 fi
 
@@ -1211,7 +1210,7 @@ fi
 # TODO can the kernel be any other name? (make vmlinux)
 # TODO arch/x86_64/boot/bzImage is a sym link to arch/x86/boot/bzImage but is it always?
 if [[ ! -f ${sEXTRACTPATH}/arch/x86/boot/bzImage ]]; then
-    Msg e "${sEXTRACTPATH}/arch/x86/boot/bzImage not found" 1
+    Log e "${sEXTRACTPATH}/arch/x86/boot/bzImage not found" 1
     ConfirmToContinue
 else
     CopyFromTo "${sEXTRACTPATH}/arch/x86/boot/bzImage" "${sINSTALLPATH}/vmlinuz-${sLOCALVER}"
@@ -1219,42 +1218,42 @@ fi
 
 # copy System.map to install dir
 if [[ ! -f ${sEXTRACTPATH}/System.map ]]; then
-    Msg e "${sEXTRACTPATH}/System.map not found" 1
+    Log e "${sEXTRACTPATH}/System.map not found" 1
     ConfirmToContinue
 else
     CopyFromTo "${sEXTRACTPATH}/System.map" "${sINSTALLPATH}/System.map-${sLOCALVER}"
 fi
 
 # make modules
-Msg i "Running \"make modules\""
+Log i "Running \"make modules\""
 iKMSECSTART=$(date +%s)
 if make "$sMAKEFLAGS" modules; then
     iKMSECEND=$(date +%s)
     iKMSECTOTAL=$((iKMSECEND - iKMSECSTART))
-    Msg s "\"make modules\" succeeded after ~${iKMSECTOTAL} seconds" 1
+    Log s "\"make modules\" succeeded after ~${iKMSECTOTAL} seconds" 1
 else
     iKMSECEND=$(date +%s)
     iKMSECTOTAL=$((iKMSECEND - iKMSECSTART))
-    Msg e "\"make modules\" failed after ~${iKMSECTOTAL} seconds"
+    Log e "\"make modules\" failed after ~${iKMSECTOTAL} seconds"
     exit 1 # TODO return 1
 fi
 
 # make modules_install to INSTALL dir
-Msg i "Running \"make INSTALL_MOD_PATH=${sINSTALLPATH}/modules modules_install\""
-if make INSTALL_MOD_PATH="${sINSTALLPATH}/modules" modules_install; then
-    Msg s "\"make modules_install\" succceeded"
+Log i "Running \"make INSTALL_MOD_PATH=${sINSTALLPATH}/modules modules_install\""
+if make INSTALL_MOD_PATH="$sINSTALLPATH"/modules modules_install; then
+    Log s "\"make modules_install\" succceeded"
 else
-    Msg e "\"make modules_install\" failed"
+    Log e "\"make modules_install\" failed"
     ConfirmToContinue
 fi
 
 # install kernel headers to install dir
 # TODO error/success checking/reporting
 if command -v rsync &>/dev/null; then
-    Msg i "Installing kernel headers to ${sINSTALLPATH}/"
-    make INSTALL_HDR_PATH="${sINSTALLPATH}/kernel_headers/usr/" "$sMAKEFLAGS" headers_install
+    Log i "Installing kernel headers to ${sINSTALLPATH}/"
+    make INSTALL_HDR_PATH="$sINSTALLPATH"/kernel_headers/usr "$sMAKEFLAGS" headers_install
 else
-    Msg w "rsync not found, not installing kernel headers"
+    Log w "rsync not found, not installing kernel headers"
 fi
 
 # Copy log file from workpath to installpath
@@ -1265,17 +1264,17 @@ fi
 # ask to remove the work dir
 # TODO ask if a copy is wanted in INSTALLPATH
 if [[ -d $sWORKPATH ]]; then
-    Msg s "Work directory is no longer needed"
-    while true; do
+    Log s "Work directory is no longer needed"
+    while :; do
         read -rp "==> Do you want to remove it? " sCHOICE
         case ${sCHOICE,,} in
             ("y"|"yes")
-                rm -r "$sWORKPATH" || { Msg e "Remove $sWORKPATH failed" 1; break 1; }
-                Msg s "Remove work directory succeeded"
+                rm -r "$sWORKPATH" || { Log e "Remove $sWORKPATH failed" 1; break 1; }
+                Log s "Remove work directory succeeded"
                 break 1
             ;;
             ("n"|"no")
-                Msg s "Work directory preserved at $sWORKPATH"
+                Log s "Work directory preserved at $sWORKPATH"
                 break 1
             ;;
             (*)
@@ -1286,11 +1285,11 @@ if [[ -d $sWORKPATH ]]; then
 fi
 
 # TODO
-Msg s "Kernel compile complete" 1
-Msg s "All completed items were copied to ${sPKGPATH}/INSTALL-${sLOCALVER}"
-Msg s "This script does not use sudo or root priveleges so you will need to complete the install manually if desired"
-Msg s "Refer to the Arch linux traditional compilation guide (or your distributions' guide) if you need further assistance"
-Msg s "    https://wiki.archlinux.org/index.php/Kernel/Traditional_compilation"
+Log s "Kernel compile complete" 1
+Log s "All completed items were copied to ${sPKGPATH}/INSTALL-${sLOCALVER}"
+Log s "This script does not use sudo or root priveleges so you will need to complete the install manually if desired"
+Log s "Refer to the Arch linux traditional compilation guide (or your distributions' guide) if you need further assistance"
+Log s "    https://wiki.archlinux.org/index.php/Kernel/Traditional_compilation"
 
 #
 # mkinitcpio -k ${sLOCALVER} -g /boot/initramfs-${sLOCALVER}.img
